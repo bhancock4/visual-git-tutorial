@@ -1,0 +1,250 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-darkest);
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.header-left {
+  flex: 0 0 auto;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 26px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.title-git {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  color: var(--green-bright);
+}
+
+.title-viz {
+  font-weight: 300;
+  color: var(--purple-light);
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.scenario-select {
+  padding: 6px 32px 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  cursor: pointer;
+  min-width: 280px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.scenario-select:hover {
+  border-color: var(--border-light);
+}
+
+.scenario-select:focus {
+  outline: none;
+  border-color: var(--purple-mid);
+  box-shadow: 0 0 0 2px var(--purple-glow);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.header-toggle input {
+  accent-color: var(--purple-mid);
+}
+
+.header-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.header-btn:hover:not(:disabled) {
+  background: var(--bg-elevated);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+.header-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.header-btn-layout {
+  font-size: 16px;
+  padding: 4px 10px;
+}
+
+.header-btn-reset {
+  color: var(--error);
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+.header-btn-reset:hover {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: var(--error);
+}
+
+/* Scenario banner */
+.scenario-banner {
+  padding: 10px 20px;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scenario-banner-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--bg-dark);
+  background: var(--purple-mid);
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.scenario-banner-body {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.scenario-banner-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-bright);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.scenario-banner-sep {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.scenario-banner-narrative {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Main body */
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-body.layout-reversed {
+  flex-direction: row-reverse;
+}
+
+.app-body.layout-reversed .sidebar-area {
+  border-left: none;
+  border-right: 1px solid var(--border);
+}
+
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.viz-panel {
+  flex: 0 0 45%;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--bg-panel);
+}
+
+.terminal-panel {
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-area {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  border-left: 1px solid var(--border);
+  background: var(--bg-dark);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .app-body,
+  .app-body.layout-reversed {
+    flex-direction: column;
+  }
+
+  .sidebar-area,
+  .app-body.layout-reversed .sidebar-area {
+    flex: 0 0 auto;
+    max-height: 200px;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .scenario-select {
+    min-width: 200px;
+  }
+}

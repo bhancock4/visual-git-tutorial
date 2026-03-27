@@ -1,0 +1,65 @@
+.viz-panel-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.viz-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 12px;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.viz-tab {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.viz-tab:hover {
+  color: var(--text-secondary);
+}
+
+.viz-tab.active {
+  color: var(--purple-light);
+  border-bottom-color: var(--purple-mid);
+  font-weight: 600;
+}
+
+.viz-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.viz-content.transport .viz-pane,
+.viz-content.graph .viz-pane {
+  height: 100%;
+}
+
+.viz-content.split {
+  display: flex;
+}
+
+.viz-content.split .viz-pane {
+  flex: 1;
+  min-width: 0;
+  border-right: 1px solid var(--border);
+}
+
+.viz-content.split .viz-pane:last-child {
+  border-right: none;
+}
+
+.viz-pane {
+  overflow: auto;
+}

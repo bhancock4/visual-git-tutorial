@@ -1,0 +1,205 @@
+.tutorial-overlay {
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tutorial-flash {
+  border-color: var(--green-bright);
+  box-shadow: 0 0 20px var(--green-glow);
+}
+
+.step-advance-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 16px;
+  background: linear-gradient(135deg, var(--green-bright), var(--green-dark));
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  animation: bannerSlideDown 0.3s ease, bannerFadeOut 0.5s ease 0.5s forwards;
+}
+
+@keyframes bannerSlideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes bannerFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.tutorial-complete {
+  text-align: center;
+  padding: 24px;
+}
+
+.tutorial-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--green-bright);
+  color: var(--bg-darkest);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.tutorial-complete h3 {
+  color: var(--green-bright);
+  margin: 0 0 8px;
+}
+
+.tutorial-complete p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 13px;
+}
+
+.tutorial-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.tutorial-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.tutorial-progress-fill {
+  height: 100%;
+  background: var(--purple-mid);
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tutorial-progress-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.tutorial-step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tutorial-title {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-bright);
+}
+
+.bash-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.tutorial-narrative {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.tutorial-expected {
+  background: var(--bg-darkest);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.tutorial-expected code {
+  color: var(--purple-light);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.tutorial-expected:hover .copy-btn {
+  opacity: 1;
+}
+
+.copy-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+
+.copy-btn.copied {
+  opacity: 1;
+  color: var(--green-bright);
+}
+
+.tutorial-hint-container {
+  margin-top: 8px;
+}
+
+.tutorial-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--warning);
+  background: rgba(251, 191, 36, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.tutorial-hint-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tutorial-hint-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border-color: var(--border-light);
+}

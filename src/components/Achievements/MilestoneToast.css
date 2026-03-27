@@ -1,0 +1,30 @@
+.milestone-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 32px var(--purple-glow);
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+
+.milestone-toast.visible {
+  transform: translateX(-50%) translateY(0);
+}
+
+.milestone-toast-icon {
+  font-size: 20px;
+}
+
+.milestone-toast-text {
+  font-size: 14px;
+  font-weight: 600;
+}
