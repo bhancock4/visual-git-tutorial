@@ -75,7 +75,6 @@ export function TransportDiagram({ onFileClick }: TransportDiagramProps = {}) {
   const headSnapshot = useMemo(() => getHeadSnapshot(repoState), [repoState]);
   const remoteSnapshot = useMemo(() => getRemoteSnapshot(repoState), [repoState]);
 
-  const activeTransitionType = transitions.length > 0 ? transitions[0].type : null;
   const transitionFiles = transitions.length > 0 ? new Set(transitions[0].files) : new Set<string>();
 
   if (!repoState.initialized) {
@@ -101,7 +100,6 @@ export function TransportDiagram({ onFileClick }: TransportDiagramProps = {}) {
             remoteSnapshot
           );
 
-          const isSource = transitions.some(t => t.from === zone.id);
           const isTarget = transitions.some(t => t.to === zone.id);
 
           return (

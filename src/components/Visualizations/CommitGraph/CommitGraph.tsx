@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useApp } from '../../../state/AppContext';
-import type { CommitObject } from '../../../engine/types';
 import './CommitGraph.css';
 
 interface GraphNode {

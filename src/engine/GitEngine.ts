@@ -726,8 +726,6 @@ export class GitEngine {
       return this.result(false, `fatal: ambiguous argument '${resetTarget}'`, []);
     }
 
-    const prevHash = this.getHeadCommitHash();
-
     // Move branch pointer
     this.updateCurrentBranch(targetCommit.hash);
 

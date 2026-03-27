@@ -55,6 +55,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       lastOutput: result.output,
       lastSuccess: result.success,
       commandHistory: [...prev.commandHistory, input],
+      undoCount: prev.undoCount,
     }));
 
     return result;
