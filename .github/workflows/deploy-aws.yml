@@ -1,0 +1,54 @@
+name: Deploy to AWS (S3 + CloudFront)
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: aws-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Build with root base path for CloudFront (not /visual-git-tutorial/)
+      - run: npx vite build --base /
+        env:
+          NODE_ENV: production
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Sync to S3 — delete old files, set cache headers
+      - name: Deploy to S3
+        run: |
+          # HTML files: no cache (so deploys are instant)
+          aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} \
+            --delete \
+            --exclude "assets/*" \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+          # Hashed assets: cache forever (filenames change on rebuild)
+          aws s3 sync dist/assets/ s3://${{ secrets.AWS_S3_BUCKET }}/assets/ \
+            --cache-control "public, max-age=31536000, immutable"
+
+      # Invalidate CloudFront cache for instant updates
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"

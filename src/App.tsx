@@ -7,6 +7,7 @@ import { TutorialOverlay } from './components/Tutorial/TutorialOverlay';
 import { HelpSidebar } from './components/HelpSidebar/HelpSidebar';
 import { MilestoneToast } from './components/Achievements/MilestoneToast';
 import { FileViewerModal } from './components/FileViewer/FileViewerModal';
+import { WelcomeModal } from './components/WelcomeModal/WelcomeModal';
 import { scenarios } from './scenarios/registry';
 import type { Scenario } from './scenarios/types';
 import type { GitEngine } from './engine/GitEngine';
@@ -18,6 +19,7 @@ function AppContent() {
   const [viewingFile, setViewingFile] = useState<{ path: string; content: string } | null>(null);
   const [layoutReversed, setLayoutReversed] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
 
   const tutorial = useTutorial(currentScenario, {
@@ -124,6 +126,12 @@ function AppContent() {
                 >
                   &#8644; Swap Sides
                 </button>
+                <button
+                  className="settings-item settings-item-btn"
+                  onClick={() => { setShowWelcome(true); setSettingsOpen(false); }}
+                >
+                  ? About
+                </button>
               </div>
             )}
           </div>
@@ -186,6 +194,9 @@ function AppContent() {
           onDismiss={tutorial.dismissMilestone}
         />
       )}
+
+      {/* One-time welcome splash */}
+      <WelcomeModal forceOpen={showWelcome} onClose={() => setShowWelcome(false)} />
     </div>
   );
 }

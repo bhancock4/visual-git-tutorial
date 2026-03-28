@@ -1,0 +1,144 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: gitvisual — S3 + CloudFront static site hosting
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: ''
+    Description: Custom domain name (e.g. gitvisual.dev). Leave empty to use CloudFront URL only.
+  CertificateArn:
+    Type: String
+    Default: ''
+    Description: ACM certificate ARN for the custom domain (must be in us-east-1). Leave empty if no custom domain.
+
+Conditions:
+  HasDomain: !Not [!Equals [!Ref DomainName, '']]
+  HasCertificate: !Not [!Equals [!Ref CertificateArn, '']]
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !If
+        - HasDomain
+        - !Ref DomainName
+        - !Sub 'gitvisual-site-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontOAC
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub '${SiteBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${AWS::StackName}-oac'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: gitvisual static site
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        PriceClass: PriceClass_100
+        # SPA routing — serve index.html for 404s
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !Ref OriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6  # CachingOptimized
+          Compress: true
+        Aliases: !If
+          - HasDomain
+          - [!Ref DomainName]
+          - !Ref AWS::NoValue
+        ViewerCertificate: !If
+          - HasCertificate
+          - AcmCertificateArn: !Ref CertificateArn
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1.2_2021
+          - CloudFrontDefaultCertificate: true
+
+  # Deploy user — GitHub Actions uses these credentials
+  DeployUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub '${AWS::StackName}-deploy'
+      Policies:
+        - PolicyName: DeployToS3AndInvalidate
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:DeleteObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt SiteBucket.Arn
+                  - !Sub '${SiteBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+                Resource: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'
+
+  DeployAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref DeployUser
+
+Outputs:
+  CloudFrontURL:
+    Description: Site URL (CloudFront)
+    Value: !Sub 'https://${Distribution.DomainName}'
+  DistributionId:
+    Description: CloudFront distribution ID (needed for cache invalidation)
+    Value: !Ref Distribution
+  BucketName:
+    Description: S3 bucket name
+    Value: !Ref SiteBucket
+  DeployAccessKeyId:
+    Description: Access key ID for GitHub Actions (store as secret)
+    Value: !Ref DeployAccessKey
+  DeploySecretAccessKey:
+    Description: Secret access key for GitHub Actions (store as secret)
+    Value: !GetAtt DeployAccessKey.SecretAccessKey
+  CustomDomainURL:
+    Condition: HasDomain
+    Description: Custom domain URL
+    Value: !Sub 'https://${DomainName}'
