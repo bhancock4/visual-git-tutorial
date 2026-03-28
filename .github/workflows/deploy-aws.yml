@@ -1,8 +1,10 @@
 name: Deploy to AWS (S3 + CloudFront)
 
 on:
-  push:
-    branches: [master]
+  # Disabled until AWS stack is deployed and GitHub secrets are configured.
+  # Uncomment the push trigger when ready:
+  # push:
+  #   branches: [master]
   workflow_dispatch:
 
 concurrency:

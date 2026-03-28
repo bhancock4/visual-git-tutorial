@@ -16,6 +16,8 @@ export const remoteScenario: Scenario = {
     engine.commit('Initial commit');
   },
   docLinks: [
+    { label: 'GitHub: Create a repo', url: 'https://docs.github.com/en/get-started/quickstart/create-a-repo' },
+    { label: 'GitHub: Set up SSH keys', url: 'https://docs.github.com/en/authentication/connecting-to-github-with-ssh' },
     { label: 'git remote docs', url: 'https://git-scm.com/docs/git-remote' },
     { label: 'git push docs', url: 'https://git-scm.com/docs/git-push' },
     { label: 'git pull docs', url: 'https://git-scm.com/docs/git-pull' },
