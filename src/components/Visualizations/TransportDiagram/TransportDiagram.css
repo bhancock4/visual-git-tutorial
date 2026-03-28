@@ -166,3 +166,26 @@
   color: var(--purple-light);
   font-weight: 600;
 }
+
+/* Flying file animation */
+.file-flying {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--purple-mid);
+  border: 1px solid var(--purple-light);
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 0 16px var(--purple-glow), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.file-flying .file-name {
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  white-space: nowrap;
+}

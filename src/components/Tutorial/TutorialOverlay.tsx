@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { TutorialStep } from '../../scenarios/types';
 import './TutorialOverlay.css';
 
@@ -8,20 +8,11 @@ interface TutorialOverlayProps {
   totalSteps: number;
   completed: boolean;
   justAdvanced: boolean;
+  terminalSide: 'left' | 'right';
 }
 
-export function TutorialOverlay({ step, stepIndex, totalSteps, completed, justAdvanced }: TutorialOverlayProps) {
-  const [showHint, setShowHint] = useState(false);
+export function TutorialOverlay({ step, stepIndex, totalSteps, completed, justAdvanced, terminalSide }: TutorialOverlayProps) {
   const [flash, setFlash] = useState(false);
-  const prevStepRef = useRef(stepIndex);
-
-  // Reset hint when step changes
-  useEffect(() => {
-    if (stepIndex !== prevStepRef.current) {
-      setShowHint(false);
-      prevStepRef.current = stepIndex;
-    }
-  }, [stepIndex]);
 
   const [copied, setCopied] = useState(false);
 
@@ -85,6 +76,7 @@ export function TutorialOverlay({ step, stepIndex, totalSteps, completed, justAd
           : step.hint?.replace('Try: ', '').replace('Type: ', '') || '';
         return (
           <div className="tutorial-expected">
+            <span className="tutorial-expected-label">Run in the terminal to the {terminalSide}:</span>
             <code>{cmdText}</code>
             {cmdText && (
               <button
@@ -108,17 +100,6 @@ export function TutorialOverlay({ step, stepIndex, totalSteps, completed, justAd
         );
       })()}
 
-      {step.hint && (
-        <div className="tutorial-hint-container">
-          {showHint ? (
-            <p className="tutorial-hint">{step.hint}</p>
-          ) : (
-            <button className="tutorial-hint-btn" onClick={() => setShowHint(true)}>
-              Need a hint?
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }

@@ -16,6 +16,7 @@ interface AppState {
 interface AppContextType {
   state: AppState;
   runCommand: (input: string) => CommandResult;
+  previewCommand: (input: string) => CommandResult;
   undo: () => void;
   canUndo: boolean;
   reset: (setupFn?: (engine: GitEngine) => void) => void;
@@ -61,6 +62,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return result;
   }, []);
 
+  const previewCommand = useCallback((input: string) => {
+    // Run command against a clone of engine state — does not mutate
+    const clonedEngine = new GitEngine();
+    clonedEngine.loadState(engineRef.current.getState());
+    return executeCommand(clonedEngine, input);
+  }, []);
+
   const undo = useCallback(() => {
     if (historyRef.current.length === 0) return;
     const prevState = historyRef.current.pop()!;
@@ -97,6 +105,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     <AppContext.Provider value={{
       state,
       runCommand,
+      previewCommand,
       undo,
       canUndo: historyRef.current.length > 0,
       reset,

@@ -130,6 +130,57 @@
   border-color: var(--error);
 }
 
+/* Settings menu */
+.settings-menu-container {
+  position: relative;
+}
+
+.header-btn-settings {
+  font-size: 16px;
+  padding: 4px 10px;
+}
+
+.settings-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 6px 0;
+  min-width: 160px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+}
+
+.settings-item:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.settings-item input {
+  accent-color: var(--purple-mid);
+}
+
+.settings-item-btn {
+  background: none;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+
 /* Scenario banner */
 .scenario-banner {
   padding: 10px 20px;
@@ -158,6 +209,7 @@
   align-items: baseline;
   gap: 8px;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .scenario-banner-title {
@@ -177,9 +229,6 @@
   font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Main body */

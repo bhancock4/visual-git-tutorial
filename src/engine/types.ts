@@ -85,6 +85,8 @@ export interface RepoState {
   gitignorePatterns: string[];
   // Track which files were removed via git rm
   removedFiles: Set<string>;
+  // Track in-progress merge for conflict resolution
+  pendingMergeParent: ObjectHash | null;
 }
 
 // ---- Zones for visualization ----

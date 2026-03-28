@@ -136,12 +136,23 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tutorial-expected-label {
+  width: 100%;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
 }
 
 .tutorial-expected code {
   color: var(--purple-light);
   font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
+  word-break: break-all;
+  min-width: 0;
 }
 
 .copy-btn {

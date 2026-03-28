@@ -1,4 +1,5 @@
 import type { Scenario } from './types';
+import { whatIsGitScenario } from './00-what-is-git';
 import { initRepoScenario } from './01-init-repo';
 import { branchingScenario } from './02-branching';
 import { mergingScenario } from './03-merging';
@@ -7,8 +8,10 @@ import { mergeConflictsScenario } from './05-merge-conflicts';
 import { gitignoreScenario } from './06-gitignore';
 import { stashScenario } from './07-stash';
 import { ohShitScenario } from './08-oh-shit';
+import { sandboxScenario } from './09-sandbox';
 
 export const scenarios: Scenario[] = [
+  whatIsGitScenario,
   initRepoScenario,
   branchingScenario,
   mergingScenario,
@@ -17,6 +20,7 @@ export const scenarios: Scenario[] = [
   gitignoreScenario,
   stashScenario,
   ohShitScenario,
+  sandboxScenario,
 ].sort((a, b) => a.order - b.order);
 
 export function getScenarioById(id: string): Scenario | undefined {
