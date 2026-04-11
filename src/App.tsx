@@ -88,6 +88,13 @@ function AppContent() {
         </div>
 
         <div className="header-right">
+          <button
+            className="header-text-link"
+            onClick={() => setShowWelcome(true)}
+            title="What is gitvisual?"
+          >
+            What is this?
+          </button>
           <a
             className="header-link header-link-seeshell"
             href="https://bhancock4.github.io/visual-shell-tutorial/"
@@ -135,12 +142,6 @@ function AppContent() {
                   onClick={() => { setLayoutReversed(r => !r); setSettingsOpen(false); }}
                 >
                   &#8644; Swap Sides
-                </button>
-                <button
-                  className="settings-item settings-item-btn"
-                  onClick={() => { setShowWelcome(true); setSettingsOpen(false); }}
-                >
-                  ? About
                 </button>
               </div>
             )}

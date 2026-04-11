@@ -120,6 +120,31 @@
   padding: 4px 10px;
 }
 
+/* "What is this?" — opens the welcome modal. Modern button-link, no underline. */
+.header-text-link {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  cursor: pointer;
+  padding: 7px 12px;
+  margin-right: 6px;
+  border-radius: 6px;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.header-text-link:hover {
+  background: rgba(167, 139, 219, 0.12);
+  color: var(--purple-light);
+}
+
+.header-text-link:active {
+  background: rgba(167, 139, 219, 0.18);
+}
+
 /* Link to seeShell — for users who arrive without basic shell skills */
 .header-link {
   display: inline-flex;
