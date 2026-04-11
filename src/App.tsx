@@ -105,6 +105,7 @@ function AppContent() {
             <span className="seeshell-icon" aria-hidden="true">🐚</span>
             <span className="seeshell-label">New to the shell?</span>
           </a>
+          <span className="header-divider" aria-hidden="true" />
           <button className="header-btn" onClick={undo} disabled={!canUndo} title="Undo last command">
             &#8630; Undo
           </button>

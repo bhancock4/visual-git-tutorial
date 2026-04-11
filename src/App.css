@@ -145,6 +145,25 @@
   background: rgba(167, 139, 219, 0.18);
 }
 
+/* Vertical divider between informational links and destructive action buttons.
+   Fades top/bottom with a subtle accent in the middle. */
+.header-divider {
+  display: inline-block;
+  width: 1px;
+  height: 26px;
+  margin: 0 8px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--border) 30%,
+    var(--purple-mid) 50%,
+    var(--border) 70%,
+    transparent 100%
+  );
+  flex-shrink: 0;
+  align-self: center;
+}
+
 /* Link to seeShell — for users who arrive without basic shell skills */
 .header-link {
   display: inline-flex;
