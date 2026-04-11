@@ -1,73 +1,52 @@
-# React + TypeScript + Vite
+# gitvisual
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive tutorial that teaches git through a simulated terminal and real-time visualizations. Type real commands, watch files flow between working directory, staging, local repo, and remote.
 
-Currently, two official plugins are available:
+**[Try it live](https://bhancock4.github.io/visual-git-tutorial/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What is this?
 
-## React Compiler
+Git's mental model is hard to build from docs alone. gitvisual makes the invisible visible — you type git commands into a browser-based terminal and watch artifacts physically move between the four zones of git.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Built for developers new to git and anyone who wants to *see* what commands actually do.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Simulated terminal** with real-ish shell commands (`touch`, `echo`, `cat`, `ls`) and full git command support
+- **Flow diagram** showing files moving between Working Directory, Staging Area, Local Repository, and Remote Repository
+- **Commit graph** with proper topological layout, lane assignment, and branch visualization
+- **10 guided scenarios** from "What is Git?" through branching, merging, conflicts, stash, and recovery
+- **Sandbox mode** for freeform experimentation
+- **Command preview** (Shift+Enter) to see what a command would do before running it
+- **Undo** to rewind any mistake instantly
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Scenarios
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+0. What is Git?
+1. Init & First Commit
+2. Branching
+3. Merging
+4. Working with Remotes
+5. Resolving Merge Conflicts
+6. Gitignore
+7. Stash
+8. I Messed Up, Now What?
+9. Sandbox
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Development
+
+```bash
+npm install
+npm run dev       # Start dev server
+npm run build     # TypeScript check + production build
+npm run test      # Run tests (Vitest)
+npm run lint      # ESLint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Tech
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+React 19, TypeScript, Vite, Vitest (283 tests), Motion (animations). No backend — everything runs in the browser.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## License
+
+MIT
