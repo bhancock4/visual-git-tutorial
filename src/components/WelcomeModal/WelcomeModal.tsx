@@ -74,6 +74,27 @@ export function WelcomeModal({ forceOpen, onClose }: WelcomeModalProps = {}) {
             </ul>
           </section>
 
+          <section className="welcome-section welcome-prereq">
+            <h2>
+              <span className="welcome-prereq-icon" aria-hidden="true">🐚</span>
+              New to the shell?
+            </h2>
+            <p>
+              This tutorial assumes you're comfortable with basics like <code>cd</code>,
+              <code>ls</code>, and <code>cat</code>. If those look unfamiliar, start with{' '}
+              <a
+                className="welcome-prereq-link"
+                href="https://bhancock4.github.io/visual-shell-tutorial/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                seeShell
+              </a>{' '}
+              — a sister tutorial built the same way that teaches the shell from scratch in
+              about an hour. Come back here when it tells you you're ready.
+            </p>
+          </section>
+
           <section className="welcome-section">
             <h2>By the end</h2>
             <p>

@@ -86,6 +86,51 @@
   margin: 0;
 }
 
+/* Prereq callout — pointer to seeShell for users who need shell basics first */
+.welcome-prereq {
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--purple-mid);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 0 0 14px;
+}
+
+.welcome-prereq h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.welcome-prereq-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.welcome-prereq p {
+  font-size: 13px;
+}
+
+.welcome-prereq p code {
+  background: var(--bg-darkest);
+  color: var(--purple-light);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: 12px;
+  margin: 0 1px;
+}
+
+.welcome-prereq-link {
+  color: var(--purple-light);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.welcome-prereq-link:hover {
+  color: var(--purple-mid);
+}
+
 .welcome-list {
   list-style: none;
   padding: 0;
