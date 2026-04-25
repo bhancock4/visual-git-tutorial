@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '../../../state/AppContext';
-import type { VirtualFile, Zone, StateTransition } from '../../../engine/types';
+import type { VirtualFile, Zone, StateTransition, RepoState } from '../../../engine/types';
 import './TransportDiagram.css';
 
 const ZONE_CONFIG: Array<{ id: Zone; label: string; color: string; icon: string }> = [
@@ -99,13 +99,96 @@ function useFlyingFiles(transitions: StateTransition[]) {
 
     if (newFlying.length > 0) {
       setFlyingFiles(newFlying);
-      // Clear after animation completes
-      const timer = setTimeout(() => setFlyingFiles([]), 600);
+      // Clear after animation completes + 500ms pause at destination
+      const timer = setTimeout(() => setFlyingFiles([]), 1500);
       return () => clearTimeout(timer);
     }
   }, [transitions]);
 
   return flyingFiles;
+}
+
+// ---- File version tracking ----
+
+function getFileContent(
+  filePath: string,
+  zone: Zone,
+  repoState: RepoState,
+  headSnapshot: Map<string, VirtualFile> | null,
+  remoteSnapshot: Map<string, VirtualFile> | null,
+): string | null {
+  switch (zone) {
+    case 'working':
+      return repoState.workingDirectory.get(filePath)?.content ?? null;
+    case 'staging':
+      return repoState.stagingArea.get(filePath)?.content ?? null;
+    case 'local':
+      return headSnapshot?.get(filePath)?.content ?? null;
+    case 'remote':
+      return remoteSnapshot?.get(filePath)?.content ?? null;
+  }
+}
+
+interface FileVersionMap {
+  getVersion(filePath: string, zone: Zone): number | null;
+  getMaxVersion(filePath: string): number;
+}
+
+function useFileVersions(
+  repoState: RepoState,
+  headSnapshot: Map<string, VirtualFile> | null,
+  remoteSnapshot: Map<string, VirtualFile> | null,
+): FileVersionMap {
+  // Persistent map: filePath -> Map<content, versionNumber>
+  const versionRegistry = useRef<Map<string, Map<string, number>>>(new Map());
+
+  // Reset version registry on scenario change/reset (detected by commit count dropping)
+  const prevCommitCount = useRef(repoState.commits.size);
+  if (repoState.commits.size < prevCommitCount.current) {
+    versionRegistry.current = new Map();
+  }
+  prevCommitCount.current = repoState.commits.size;
+
+  // Build a lookup of zone -> filePath -> version for the current state
+  const versionMap = useMemo(() => {
+    const registry = versionRegistry.current;
+    const zoneVersions = new Map<string, number>(); // "zone:filePath" -> version
+    const maxVersions = new Map<string, number>(); // filePath -> highest version seen
+
+    const zones: Zone[] = ['working', 'staging', 'local', 'remote'];
+    for (const zone of zones) {
+      const files = getFilesForZone(zone, repoState.workingDirectory, repoState.stagingArea, headSnapshot, remoteSnapshot);
+      for (const filePath of files) {
+        const content = getFileContent(filePath, zone, repoState, headSnapshot, remoteSnapshot);
+        if (content === null) continue;
+
+        if (!registry.has(filePath)) {
+          registry.set(filePath, new Map());
+        }
+        const fileRegistry = registry.get(filePath)!;
+
+        if (!fileRegistry.has(content)) {
+          fileRegistry.set(content, fileRegistry.size + 1);
+        }
+        const version = fileRegistry.get(content)!;
+        zoneVersions.set(`${zone}:${filePath}`, version);
+
+        const prev = maxVersions.get(filePath) ?? 0;
+        if (version > prev) maxVersions.set(filePath, version);
+      }
+    }
+
+    return { zoneVersions, maxVersions };
+  }, [repoState, headSnapshot, remoteSnapshot]);
+
+  return useMemo(() => ({
+    getVersion(filePath: string, zone: Zone): number | null {
+      return versionMap.zoneVersions.get(`${zone}:${filePath}`) ?? null;
+    },
+    getMaxVersion(filePath: string): number {
+      return versionMap.maxVersions.get(filePath) ?? 0;
+    },
+  }), [versionMap]);
 }
 
 interface TransportDiagramProps {
@@ -118,6 +201,7 @@ export function TransportDiagram({ onFileClick }: TransportDiagramProps = {}) {
 
   const headSnapshot = useMemo(() => getHeadSnapshot(repoState), [repoState]);
   const remoteSnapshot = useMemo(() => getRemoteSnapshot(repoState), [repoState]);
+  const fileVersions = useFileVersions(repoState, headSnapshot, remoteSnapshot);
 
   const transitionFiles = transitions.length > 0 ? new Set(transitions[0].files) : new Set<string>();
   const flyingFiles = useFlyingFiles(transitions);
@@ -187,10 +271,13 @@ export function TransportDiagram({ onFileClick }: TransportDiagramProps = {}) {
                 <AnimatePresence mode="popLayout">
                   {files.map((filePath) => {
                     const isMoving = transitionFiles.has(filePath);
+                    const version = fileVersions.getVersion(filePath, zone.id);
+                    const maxVersion = fileVersions.getMaxVersion(filePath);
+                    const isStale = version !== null && maxVersion > 1 && version < maxVersion;
                     return (
                       <motion.div
                         key={`${zone.id}-${filePath}`}
-                        className={`file-blob ${isMoving ? 'file-moving' : ''}`}
+                        className={`file-blob ${isMoving ? 'file-moving' : ''} ${isStale ? 'file-stale' : ''}`}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
@@ -209,6 +296,11 @@ export function TransportDiagram({ onFileClick }: TransportDiagramProps = {}) {
                       >
                         <span className="file-icon">📄</span>
                         <span className="file-name">{filePath.split('/').pop()}</span>
+                        {version !== null && maxVersion > 1 && (
+                          <span className={`file-version ${isStale ? 'file-version-stale' : 'file-version-current'}`}>
+                            v{version}
+                          </span>
+                        )}
                       </motion.div>
                     );
                   })}
@@ -227,6 +319,10 @@ export function TransportDiagram({ onFileClick }: TransportDiagramProps = {}) {
         {flyingFiles.map((ff) => {
           const from = getFlyPosition(ff.fromZone);
           const to = getFlyPosition(ff.toZone);
+          // Show the version that's arriving at the destination
+          const flyVersion = fileVersions.getVersion(ff.fileName, ff.toZone)
+            ?? fileVersions.getVersion(ff.fileName, ff.fromZone);
+          const flyMaxVersion = fileVersions.getMaxVersion(ff.fileName);
 
           return (
             <motion.div
@@ -235,10 +331,13 @@ export function TransportDiagram({ onFileClick }: TransportDiagramProps = {}) {
               initial={{ x: from.x - 30, y: from.y - 12, opacity: 1, scale: 1 }}
               animate={{ x: to.x - 30, y: to.y - 12, opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ type: 'spring', stiffness: 120, damping: 18, mass: 0.8 }}
+              transition={{ type: 'spring', stiffness: 50, damping: 14, mass: 1.4 }}
             >
               <span className="file-icon">📄</span>
               <span className="file-name">{ff.fileName}</span>
+              {flyVersion !== null && flyMaxVersion > 1 && (
+                <span className="file-version file-version-flying">v{flyVersion}</span>
+              )}
             </motion.div>
           );
         })}
