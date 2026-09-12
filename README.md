@@ -37,12 +37,14 @@ Built for developers new to git and anyone who wants to *see* what commands actu
 
 The tutorial is freemium, gated purely on the client (no backend):
 
-- **Free** — scenarios `order` 0–4: *What is Git, Init & First Commit, Branching, Merging, Remotes*.
-- **Paid ($19)** — scenarios `order` 5–9: *Merge Conflicts, Gitignore, Stash, Oh Shit, Sandbox*, plus a PDF checklist (delivered off-site via Gumroad).
+- **Free** — scenarios `order` 0–4 (*What is Git, Init & First Commit, Branching, Merging, Remotes*) **and** `order` 9 (*Sandbox*). The Sandbox is free for everyone.
+- **Paid ($19)** — scenarios `order` 5–8: *Merge Conflicts, Gitignore, Stash, Oh Shit*, plus a PDF checklist.
 
 Free users see paid scenarios in the picker marked `🔒 … (Paid)`; opening one shows an upgrade CTA instead of switching.
 
-**How unlock works** (see `src/state/access.ts`): unlock state is stored in `localStorage`. It flips on when the URL contains an unlock token, e.g. `https://<host>/#/tutorial?unlock=<TOKEN>`. The token defaults to `ai-cobuilder` and can be overridden at build time with `VITE_UNLOCK_TOKEN`. After purchase, point Gumroad's redirect/"content" URL at that link — the token is consumed on load, unlock is persisted, and the token is stripped from the address bar. Use `?unlock=reset` to re-lock for demos/testing. The checkout link is set via `VITE_CHECKOUT_INDIVIDUAL_URL` (falls back to a disabled button).
+**Payments are paused.** The primary "Buy" CTAs on the landing page and upgrade modal are a waitlist / "Coming soon — $19" — there is no live checkout and nothing is charged. Set `VITE_WAITLIST_URL` to turn the button into a real "Join the waitlist" link; otherwise it renders as a disabled "Coming soon" button.
+
+**How unlock works** (see `src/state/access.ts`): the unlock-token mechanism is kept intact for when payments resume. Unlock state is stored in `localStorage` and flips on when the URL contains an unlock token, e.g. `https://<host>/#/tutorial?unlock=<TOKEN>`. The token defaults to `ai-cobuilder` and can be overridden at build time with `VITE_UNLOCK_TOKEN`. When checkout returns, point the post-purchase redirect at that link — the token is consumed on load, unlock is persisted, and the token is stripped from the address bar. Use `?unlock=reset` to re-lock for demos/testing.
 
 ## Development
 

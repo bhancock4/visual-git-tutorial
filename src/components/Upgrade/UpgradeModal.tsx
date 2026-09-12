@@ -1,6 +1,9 @@
 import './UpgradeModal.css';
 
-const INDIVIDUAL_CHECKOUT = import.meta.env.VITE_CHECKOUT_INDIVIDUAL_URL || '#';
+// Payments are paused: the primary CTA points at a waitlist, not a live checkout.
+// When VITE_WAITLIST_URL is unset the button is just a disabled "Coming soon".
+// The unlock-token mechanism (see src/state/access.ts) stays intact for later.
+const WAITLIST_URL = import.meta.env.VITE_WAITLIST_URL || '#';
 
 interface UpgradeModalProps {
   /** Title of the scenario the learner tried to open. */
@@ -10,12 +13,12 @@ interface UpgradeModalProps {
 
 /**
  * Shown when a free learner tries to open a locked (paid) scenario. Explains the
- * $19 unlock honestly and points at checkout. Purchase delivery is handled by
- * Gumroad off-site; the in-app unlock happens via the `?unlock=<token>` URL the
- * buyer is sent to afterward (see src/state/access.ts).
+ * $19 unlock honestly. Payments are currently paused, so the CTA is a waitlist
+ * ("Coming soon — $19") rather than a checkout. When checkout returns, buyers
+ * will be sent to a `?unlock=<token>` URL to unlock in-app (see access.ts).
  */
 export function UpgradeModal({ scenarioTitle, onClose }: UpgradeModalProps) {
-  const checkoutReady = INDIVIDUAL_CHECKOUT !== '#';
+  const waitlistReady = WAITLIST_URL !== '#';
 
   return (
     <div className="upgrade-backdrop" onClick={onClose}>
@@ -40,17 +43,16 @@ export function UpgradeModal({ scenarioTitle, onClose }: UpgradeModalProps) {
           <li>.gitignore — keep secrets and junk out of history</li>
           <li>Stash — park half-finished work safely</li>
           <li>"Oh shit" recovery — reset, revert, reflog</li>
-          <li>Freeform sandbox to practice it all</li>
           <li>PDF quick-reference checklist</li>
         </ul>
 
         <div className="upgrade-actions">
           <a
             className="upgrade-btn upgrade-btn-primary"
-            href={INDIVIDUAL_CHECKOUT}
-            {...(!checkoutReady ? { 'aria-disabled': true } : {})}
+            href={WAITLIST_URL}
+            {...(!waitlistReady ? { 'aria-disabled': true } : {})}
           >
-            Unlock everything — $19
+            {waitlistReady ? 'Join the waitlist — $19' : 'Coming soon — $19'}
           </a>
           <button className="upgrade-btn upgrade-btn-ghost" onClick={onClose}>
             Keep exploring free scenarios
@@ -58,8 +60,8 @@ export function UpgradeModal({ scenarioTitle, onClose }: UpgradeModalProps) {
         </div>
 
         <p className="upgrade-fineprint">
-          One-time purchase. The free path (through Remotes) stays free forever.
-          {!checkoutReady && ' Checkout is not wired up yet — nothing will be charged.'}
+          Payments are paused right now — nothing will be charged. The free path
+          (through Remotes, plus the Sandbox) stays free forever.
         </p>
       </div>
     </div>

@@ -1,8 +1,11 @@
 /**
  * Freemium access gating.
  *
- * Free scenarios: order 0–4 (What is Git → Remotes).
- * Paid scenarios: order 5–9 (Merge Conflicts, Gitignore, Stash, Oh Shit, Sandbox).
+ * Free scenarios: order 0–4 (What is Git → Remotes) AND order 9 (Sandbox).
+ * Paid scenarios: order 5–8 (Merge Conflicts, Gitignore, Stash, Oh Shit).
+ *
+ * Sandbox is intentionally free for everyone. Only the four "when an AI build
+ * gets messy" scenarios (plus the PDF checklist on the landing) are paid.
  *
  * There is no backend. Unlock state lives in localStorage and can be flipped on
  * by an unlock token in the URL. This lets us wire Gumroad later without a
@@ -14,10 +17,20 @@
  * build time). On first load the token is consumed, unlock is persisted to
  * localStorage, and the token is stripped from the URL so it isn't shared by
  * accident. For demos/testing, `?unlock=reset` clears the unlock again.
+ *
+ * NOTE: payments are currently paused — the landing/upgrade CTAs point at a
+ * waitlist ("Coming soon — $19"), not a live checkout. The unlock-token
+ * mechanism below is kept intact so we can flip checkout back on later.
  */
 
-/** Highest scenario `order` available for free. */
-export const FREE_MAX_ORDER = 4;
+/** Inclusive scenario `order` range that requires the paid unlock. */
+export const PAID_MIN_ORDER = 5;
+export const PAID_MAX_ORDER = 8;
+
+/** Whether a scenario (by `order`) is part of the paid unlock. */
+export function isPaidScenario(order: number): boolean {
+  return order >= PAID_MIN_ORDER && order <= PAID_MAX_ORDER;
+}
 
 const UNLOCK_STORAGE_KEY = 'gitvisual:unlocked';
 
@@ -68,7 +81,7 @@ export function setUnlocked(unlocked: boolean): void {
 
 /** A scenario is locked when it's a paid scenario and the user hasn't unlocked. */
 export function isScenarioLocked(order: number, unlocked: boolean): boolean {
-  return !unlocked && order > FREE_MAX_ORDER;
+  return !unlocked && isPaidScenario(order);
 }
 
 /**

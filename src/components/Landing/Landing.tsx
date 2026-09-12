@@ -1,17 +1,14 @@
 import { scenarios } from '../../scenarios/registry';
+import { isPaidScenario } from '../../state/access';
 import './Landing.css';
 
 const TUTORIAL_HREF = '#/tutorial';
 
-// Checkout link is intentionally not hardcoded. Wire the real Gumroad URL later
-// via env. Buyers are sent back to `#/tutorial?unlock=<token>` to unlock in-app
-// (see src/state/access.ts).
-const INDIVIDUAL_CHECKOUT = import.meta.env.VITE_CHECKOUT_INDIVIDUAL_URL || '#';
-
-// The free path covers scenarios through Remotes (order 0–4). Everything above
-// that is part of the paid Individual unlock — keep this in sync with
-// FREE_MAX_ORDER in src/state/access.ts.
-const FREE_MAX_ORDER = 4;
+// Payments are paused: the primary CTA points at a waitlist, not a live checkout.
+// When VITE_WAITLIST_URL is unset the button is a disabled "Coming soon". The
+// unlock-token mechanism (see src/state/access.ts) stays intact for later.
+const WAITLIST_URL = import.meta.env.VITE_WAITLIST_URL || '#';
+const WAITLIST_READY = WAITLIST_URL !== '#';
 
 const zones = [
   { key: 'working', label: 'Working Directory', blurb: 'Where the AI edits your files.' },
@@ -195,7 +192,7 @@ export function Landing() {
           </p>
           <div className="lp-grid lp-grid-3 lp-scenarios">
             {scenarios.map(s => {
-              const paid = s.order > FREE_MAX_ORDER;
+              const paid = isPaidScenario(s.order);
               return (
                 <a className="lp-scenario" href={TUTORIAL_HREF} key={s.id}>
                   <span className="lp-scenario-tags">
@@ -251,6 +248,7 @@ export function Landing() {
               <ul className="lp-price-feats">
                 <li>The full browser tutorial — nothing to install</li>
                 <li>Scenarios through Remotes: What is Git, Init &amp; First Commit, Branching, Merging, Remotes</li>
+                <li>The freeform Sandbox to experiment with any command</li>
                 <li>The transport diagram and commit graph visualizations</li>
               </ul>
               <a className="lp-btn lp-btn-ghost lp-price-cta" href={TUTORIAL_HREF}>
@@ -270,22 +268,23 @@ export function Landing() {
                 <li className="lp-price-sub">.gitignore — keep secrets &amp; junk out of history</li>
                 <li className="lp-price-sub">Stash — park half-finished work safely</li>
                 <li className="lp-price-sub">"Oh shit" recovery — reset, revert, reflog</li>
-                <li className="lp-price-sub">Freeform sandbox to practice it all</li>
                 <li>Printable PDF quick-reference checklist</li>
               </ul>
               <a
                 className="lp-btn lp-btn-primary lp-price-cta"
-                href={INDIVIDUAL_CHECKOUT}
-                {...(INDIVIDUAL_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
+                href={WAITLIST_URL}
+                {...(!WAITLIST_READY ? { 'aria-disabled': true } : {})}
               >
-                Unlock everything — $19
+                {WAITLIST_READY ? 'Join the waitlist — $19' : 'Coming soon — $19'}
               </a>
             </div>
           </div>
           <p className="lp-fineprint">
-            {INDIVIDUAL_CHECKOUT === '#'
-              ? 'Checkout is not wired up yet — nothing will be charged. The free path stays free forever.'
-              : 'One-time purchase, delivered via Gumroad. The free path stays free forever.'}
+            Payments are paused right now — nothing will be charged.{' '}
+            {WAITLIST_READY
+              ? 'Join the waitlist and we\u2019ll let you know when the $19 unlock goes live.'
+              : 'The $19 unlock is coming soon.'}{' '}
+            The free path — through Remotes, plus the Sandbox — stays free forever.
           </p>
         </div>
       </section>
