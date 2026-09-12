@@ -16,16 +16,16 @@ const zones = [
 
 const audiences = [
   {
-    title: 'AI co-builders',
-    body: 'You are shipping software with a generative AI partner. Git is how you review, keep, and safely undo what the AI writes — the difference between "the AI broke everything" and "I rolled back in one command".',
+    title: 'Building with AI',
+    body: 'You are using generative AI to write code, and you need just enough git to review, keep, and safely undo what it produces — the difference between "the AI broke everything" and "I rolled back in one command".',
   },
   {
-    title: 'Business & non-technical builders',
-    body: 'You are not a career engineer, but you are building real things now. Learn the handful of git ideas — clone, branch, commit, pull request — that let you collaborate with a codebase without fear.',
+    title: 'Hobbyists & weekend builders',
+    body: 'Side projects, personal apps, that thing you keep tinkering with. Learn the handful of git ideas that let you save your work, experiment freely, and never lose progress.',
   },
   {
-    title: 'Teams onboarding fast',
-    body: 'Give new builders a shared mental model before they touch a real repo. Everyone sees the same picture of where changes live and how they flow.',
+    title: 'Returning to programming',
+    body: 'Coming back after time away? Git quietly became how everyone works. Rebuild the mental model fast — clone, branch, commit, pull request — so you feel at home in any repo again.',
   },
 ];
 
@@ -124,8 +124,8 @@ export function Landing() {
         <div className="lp-container">
           <h2 className="lp-h2">Who it's for</h2>
           <p className="lp-lead">
-            Built for the new wave of builders — people shipping software with AI who need
-            git literacy, not a computer-science degree.
+            Made for individuals — hobbyists, people returning to programming, and anyone
+            building with AI who needs real git literacy, not a computer-science degree.
           </p>
           <div className="lp-grid lp-grid-3">
             {audiences.map(a => (
@@ -206,7 +206,7 @@ export function Landing() {
           <p className="lp-lead">
             This project is young. Rather than invent testimonials or logos, we'll let the
             product speak — try the tutorial and see for yourself. Real stories from learners
-            and teams will land here as they come in.
+            will land here as they come in.
           </p>
           <div className="lp-proof-slots">
             <div className="lp-proof-slot">
@@ -224,12 +224,12 @@ export function Landing() {
       {/* Pricing */}
       <section className="lp-section lp-light" id="pricing">
         <div className="lp-container">
-          <h2 className="lp-h2">Pricing</h2>
+          <h2 className="lp-h2">Simple pricing for individuals</h2>
           <p className="lp-lead">
-            Start free. Upgrade when you want to keep going. Prices below are early
-            placeholders while we finalize plans.
+            Start free, then unlock the full path for $19 when you're ready. Built for one
+            person learning at their own pace. Prices are early placeholders.
           </p>
-          <div className="lp-grid lp-grid-3 lp-pricing">
+          <div className="lp-grid lp-pricing lp-pricing-2">
             <div className="lp-price-card">
               <h3 className="lp-price-name">Free</h3>
               <p className="lp-price-amount">$0</p>
@@ -240,18 +240,18 @@ export function Landing() {
                 <li>Sandbox mode</li>
               </ul>
               <a className="lp-btn lp-btn-ghost lp-price-cta" href={TUTORIAL_HREF}>
-                Start learning
+                Start the tutorial
               </a>
             </div>
 
             <div className="lp-price-card lp-price-featured">
-              <span className="lp-price-badge">Most popular</span>
+              <span className="lp-price-badge">Best for individuals</span>
               <h3 className="lp-price-name">Individual</h3>
               <p className="lp-price-amount">$19</p>
               <p className="lp-price-per">one-time · placeholder</p>
               <ul className="lp-price-feats">
                 <li>Everything in Free</li>
-                <li>AI co-builder workflow track</li>
+                <li>The AI co-builder workflow track</li>
                 <li>Progress saving &amp; certificate</li>
                 <li>Priority updates</li>
               </ul>
@@ -260,31 +260,20 @@ export function Landing() {
                 href={INDIVIDUAL_CHECKOUT}
                 {...(INDIVIDUAL_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
               >
-                Buy Individual
-              </a>
-            </div>
-
-            <div className="lp-price-card">
-              <h3 className="lp-price-name">Team Pack</h3>
-              <p className="lp-price-amount">$149</p>
-              <p className="lp-price-per">per team · placeholder</p>
-              <ul className="lp-price-feats">
-                <li>Everything in Individual</li>
-                <li>Shared onboarding path</li>
-                <li>Team progress dashboard</li>
-                <li>Invoicing &amp; support</li>
-              </ul>
-              <a
-                className="lp-btn lp-btn-primary lp-price-cta"
-                href={TEAM_CHECKOUT}
-                {...(TEAM_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
-              >
-                Buy Team Pack
+                Buy Individual — $19
               </a>
             </div>
           </div>
           <p className="lp-fineprint">
-            Placeholder pricing — no checkout is wired up yet. Nothing will be charged.
+            Placeholder pricing — no checkout is wired up yet, nothing will be charged.{' '}
+            Got a small group?{' '}
+            <a
+              className="lp-team-link"
+              href={TEAM_CHECKOUT}
+              {...(TEAM_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
+            >
+              A Team Pack ($149) is available on request.
+            </a>
           </p>
         </div>
       </section>

@@ -300,6 +300,18 @@
 
 /* Pricing */
 .lp-pricing { align-items: stretch; }
+.lp-pricing-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.lp-team-link {
+  color: var(--lp-accent);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.lp-team-link[aria-disabled="true"] { cursor: default; }
 .lp-price-card {
   position: relative;
   display: flex;
@@ -431,7 +443,7 @@
 
 @media (max-width: 640px) {
   .lp-brand-tag { display: none; }
-  .lp-grid-2, .lp-grid-3, .lp-proof-slots { grid-template-columns: 1fr; }
+  .lp-grid-2, .lp-grid-3, .lp-proof-slots, .lp-pricing-2 { grid-template-columns: 1fr; }
   .lp-section { padding: 52px 0; }
   .lp-flow-item { flex: 1 1 100%; }
   .lp-flow-arrow { transform: rotate(90deg); align-self: center; width: 100%; text-align: center; }
