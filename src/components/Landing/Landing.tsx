@@ -3,9 +3,15 @@ import './Landing.css';
 
 const TUTORIAL_HREF = '#/tutorial';
 
-// Checkout links are intentionally not hardcoded. Wire real ones later via env.
+// Checkout link is intentionally not hardcoded. Wire the real Gumroad URL later
+// via env. Buyers are sent back to `#/tutorial?unlock=<token>` to unlock in-app
+// (see src/state/access.ts).
 const INDIVIDUAL_CHECKOUT = import.meta.env.VITE_CHECKOUT_INDIVIDUAL_URL || '#';
-const TEAM_CHECKOUT = import.meta.env.VITE_CHECKOUT_TEAM_URL || '#';
+
+// The free path covers scenarios through Remotes (order 0–4). Everything above
+// that is part of the paid Individual unlock — keep this in sync with
+// FREE_MAX_ORDER in src/state/access.ts.
+const FREE_MAX_ORDER = 4;
 
 const zones = [
   { key: 'working', label: 'Working Directory', blurb: 'Where the AI edits your files.' },
@@ -188,13 +194,21 @@ export function Landing() {
             skills you'll actually use with an AI co-builder.
           </p>
           <div className="lp-grid lp-grid-3 lp-scenarios">
-            {scenarios.map(s => (
-              <a className="lp-scenario" href={TUTORIAL_HREF} key={s.id}>
-                <span className={`lp-scenario-diff lp-diff-${s.difficulty}`}>{s.difficulty}</span>
-                <h3 className="lp-scenario-title">{s.title}</h3>
-                <p className="lp-scenario-desc">{s.description}</p>
-              </a>
-            ))}
+            {scenarios.map(s => {
+              const paid = s.order > FREE_MAX_ORDER;
+              return (
+                <a className="lp-scenario" href={TUTORIAL_HREF} key={s.id}>
+                  <span className="lp-scenario-tags">
+                    <span className={`lp-scenario-diff lp-diff-${s.difficulty}`}>{s.difficulty}</span>
+                    <span className={`lp-scenario-tier lp-tier-${paid ? 'paid' : 'free'}`}>
+                      {paid ? 'Paid' : 'Free'}
+                    </span>
+                  </span>
+                  <h3 className="lp-scenario-title">{s.title}</h3>
+                  <p className="lp-scenario-desc">{s.description}</p>
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -226,18 +240,18 @@ export function Landing() {
         <div className="lp-container">
           <h2 className="lp-h2">Simple pricing for individuals</h2>
           <p className="lp-lead">
-            Start free, then unlock the full path for $19 when you're ready. Built for one
-            person learning at their own pace. Prices are early placeholders.
+            Learn the fundamentals free. Pay once to unlock the skills you need when an AI
+            build gets messy. Built for one person learning at their own pace.
           </p>
           <div className="lp-grid lp-pricing lp-pricing-2">
             <div className="lp-price-card">
               <h3 className="lp-price-name">Free</h3>
               <p className="lp-price-amount">$0</p>
-              <p className="lp-price-per">to try, forever</p>
+              <p className="lp-price-per">forever, no signup</p>
               <ul className="lp-price-feats">
-                <li>Full interactive tutorial</li>
-                <li>All guided scenarios</li>
-                <li>Sandbox mode</li>
+                <li>The full browser tutorial — nothing to install</li>
+                <li>Scenarios through Remotes: What is Git, Init &amp; First Commit, Branching, Merging, Remotes</li>
+                <li>The transport diagram and commit graph visualizations</li>
               </ul>
               <a className="lp-btn lp-btn-ghost lp-price-cta" href={TUTORIAL_HREF}>
                 Start the tutorial
@@ -248,32 +262,30 @@ export function Landing() {
               <span className="lp-price-badge">Best for individuals</span>
               <h3 className="lp-price-name">Individual</h3>
               <p className="lp-price-amount">$19</p>
-              <p className="lp-price-per">one-time · placeholder</p>
+              <p className="lp-price-per">one-time</p>
               <ul className="lp-price-feats">
                 <li>Everything in Free</li>
-                <li>The AI co-builder workflow track</li>
-                <li>Progress saving &amp; certificate</li>
-                <li>Priority updates</li>
+                <li>Advanced scenarios — the git you need when AI builds go sideways:</li>
+                <li className="lp-price-sub">Resolving merge conflicts</li>
+                <li className="lp-price-sub">.gitignore — keep secrets &amp; junk out of history</li>
+                <li className="lp-price-sub">Stash — park half-finished work safely</li>
+                <li className="lp-price-sub">"Oh shit" recovery — reset, revert, reflog</li>
+                <li className="lp-price-sub">Freeform sandbox to practice it all</li>
+                <li>Printable PDF quick-reference checklist</li>
               </ul>
               <a
                 className="lp-btn lp-btn-primary lp-price-cta"
                 href={INDIVIDUAL_CHECKOUT}
                 {...(INDIVIDUAL_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
               >
-                Buy Individual — $19
+                Unlock everything — $19
               </a>
             </div>
           </div>
           <p className="lp-fineprint">
-            Placeholder pricing — no checkout is wired up yet, nothing will be charged.{' '}
-            Got a small group?{' '}
-            <a
-              className="lp-team-link"
-              href={TEAM_CHECKOUT}
-              {...(TEAM_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
-            >
-              A Team Pack ($149) is available on request.
-            </a>
+            {INDIVIDUAL_CHECKOUT === '#'
+              ? 'Checkout is not wired up yet — nothing will be charged. The free path stays free forever.'
+              : 'One-time purchase, delivered via Gumroad. The free path stays free forever.'}
           </p>
         </div>
       </section>

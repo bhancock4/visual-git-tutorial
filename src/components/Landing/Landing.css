@@ -277,6 +277,22 @@
 .lp-diff-beginner { background: #e6f6ec; color: #1f7a44; }
 .lp-diff-intermediate { background: #fef3d9; color: #9a6a00; }
 .lp-diff-advanced { background: #f6e6ea; color: #a23a52; }
+.lp-scenario-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lp-scenario-tier {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+.lp-tier-free { background: #eef1f6; color: #4a5568; }
+.lp-tier-paid { background: #ece6f6; color: #6a3aa2; }
 .lp-scenario-title { font-size: 17px; font-weight: 700; color: var(--lp-ink); }
 .lp-scenario-desc { font-size: 14px; line-height: 1.55; color: var(--lp-ink-soft); }
 
@@ -306,12 +322,6 @@
   margin-left: auto;
   margin-right: auto;
 }
-.lp-team-link {
-  color: var(--lp-accent);
-  font-weight: 600;
-  text-decoration: underline;
-}
-.lp-team-link[aria-disabled="true"] { cursor: default; }
 .lp-price-card {
   position: relative;
   display: flex;
@@ -363,6 +373,16 @@
   left: 0;
   color: var(--lp-green);
   font-weight: 700;
+}
+.lp-price-feats li.lp-price-sub {
+  padding-left: 38px;
+  font-size: 13px;
+  color: var(--lp-ink-mute);
+}
+.lp-price-feats li.lp-price-sub::before {
+  content: '·';
+  left: 24px;
+  color: var(--lp-ink-mute);
 }
 .lp-price-cta { width: 100%; }
 .lp-fineprint {

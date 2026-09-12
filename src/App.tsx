@@ -8,9 +8,11 @@ import { HelpSidebar } from './components/HelpSidebar/HelpSidebar';
 import { MilestoneToast } from './components/Achievements/MilestoneToast';
 import { FileViewerModal } from './components/FileViewer/FileViewerModal';
 import { WelcomeModal } from './components/WelcomeModal/WelcomeModal';
+import { UpgradeModal } from './components/Upgrade/UpgradeModal';
 import { scenarios } from './scenarios/registry';
 import type { Scenario } from './scenarios/types';
 import type { GitEngine } from './engine/GitEngine';
+import { consumeUnlockFromUrl, isScenarioLocked, isUnlocked } from './state/access';
 import './App.css';
 
 function AppContent() {
@@ -20,6 +22,12 @@ function AppContent() {
   const [layoutReversed, setLayoutReversed] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
+  // Freemium gate: honor an unlock token in the URL, then remember unlock state.
+  const [unlocked, setUnlockedState] = useState<boolean>(() => {
+    const fromUrl = consumeUnlockFromUrl();
+    return fromUrl || isUnlocked();
+  });
+  const [upgradeFor, setUpgradeFor] = useState<Scenario | null>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
 
   const tutorial = useTutorial(currentScenario, {
@@ -34,15 +42,31 @@ function AppContent() {
     const scenario = scenarios.find(s => s.id === scenarioId);
     if (!scenario) return;
 
+    // Paid scenarios are gated for free users — show the upgrade CTA instead of switching.
+    if (isScenarioLocked(scenario.order, unlocked)) {
+      setUpgradeFor(scenario);
+      return;
+    }
+
     setCurrentScenario(scenario);
     tutorial.changeScenario();
     reset((engine: GitEngine) => scenario.setup(engine));
-  }, [reset, tutorial.changeScenario]);
+  }, [reset, tutorial.changeScenario, unlocked]);
 
   // Initialize first scenario
   useEffect(() => {
     reset((engine: GitEngine) => currentScenario.setup(engine));
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // If an unlock token arrives while the app is already open (e.g. hash navigation
+  // back from Gumroad), consume it and update access.
+  useEffect(() => {
+    const onHashChange = () => {
+      if (consumeUnlockFromUrl()) setUnlockedState(true);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
   // Close settings dropdown on outside click
@@ -79,11 +103,14 @@ function AppContent() {
             value={currentScenario.id}
             onChange={e => handleScenarioChange(e.target.value)}
           >
-            {scenarios.map(s => (
-              <option key={s.id} value={s.id}>
-                {s.title}
-              </option>
-            ))}
+            {scenarios.map(s => {
+              const locked = isScenarioLocked(s.order, unlocked);
+              return (
+                <option key={s.id} value={s.id}>
+                  {locked ? `🔒 ${s.title} (Paid)` : s.title}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -199,6 +226,14 @@ function AppContent() {
 
       {/* One-time welcome splash */}
       <WelcomeModal forceOpen={showWelcome} onClose={() => setShowWelcome(false)} />
+
+      {/* Upgrade CTA when a free user opens a locked scenario */}
+      {upgradeFor && (
+        <UpgradeModal
+          scenarioTitle={upgradeFor.title}
+          onClose={() => setUpgradeFor(null)}
+        />
+      )}
     </div>
   );
 }

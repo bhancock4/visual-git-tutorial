@@ -33,6 +33,17 @@ Built for developers new to git and anyone who wants to *see* what commands actu
 8. I Messed Up, Now What?
 9. Sandbox
 
+## Pricing & unlock (freemium)
+
+The tutorial is freemium, gated purely on the client (no backend):
+
+- **Free** — scenarios `order` 0–4: *What is Git, Init & First Commit, Branching, Merging, Remotes*.
+- **Paid ($19)** — scenarios `order` 5–9: *Merge Conflicts, Gitignore, Stash, Oh Shit, Sandbox*, plus a PDF checklist (delivered off-site via Gumroad).
+
+Free users see paid scenarios in the picker marked `🔒 … (Paid)`; opening one shows an upgrade CTA instead of switching.
+
+**How unlock works** (see `src/state/access.ts`): unlock state is stored in `localStorage`. It flips on when the URL contains an unlock token, e.g. `https://<host>/#/tutorial?unlock=<TOKEN>`. The token defaults to `ai-cobuilder` and can be overridden at build time with `VITE_UNLOCK_TOKEN`. After purchase, point Gumroad's redirect/"content" URL at that link — the token is consumed on load, unlock is persisted, and the token is stripped from the address bar. Use `?unlock=reset` to re-lock for demos/testing. The checkout link is set via `VITE_CHECKOUT_INDIVIDUAL_URL` (falls back to a disabled button).
+
 ## Development
 
 ```bash
