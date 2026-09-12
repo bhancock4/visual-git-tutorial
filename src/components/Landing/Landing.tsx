@@ -3,9 +3,10 @@ import './Landing.css';
 
 const TUTORIAL_HREF = '#/tutorial';
 
-// Checkout links are intentionally not hardcoded. Wire real ones later via env.
+// Checkout link is intentionally not hardcoded. Wire a real one later via env.
+// The landing markets Individual only; Team Pack is a quiet off-site SKU and is
+// deliberately not linked from here.
 const INDIVIDUAL_CHECKOUT = import.meta.env.VITE_CHECKOUT_INDIVIDUAL_URL || '#';
-const TEAM_CHECKOUT = import.meta.env.VITE_CHECKOUT_TEAM_URL || '#';
 
 const zones = [
   { key: 'working', label: 'Working Directory', blurb: 'Where the AI edits your files.' },
@@ -265,15 +266,7 @@ export function Landing() {
             </div>
           </div>
           <p className="lp-fineprint">
-            Placeholder pricing — no checkout is wired up yet, nothing will be charged.{' '}
-            Got a small group?{' '}
-            <a
-              className="lp-team-link"
-              href={TEAM_CHECKOUT}
-              {...(TEAM_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
-            >
-              A Team Pack ($149) is available on request.
-            </a>
+            Placeholder pricing — no checkout is wired up yet, nothing will be charged.
           </p>
         </div>
       </section>

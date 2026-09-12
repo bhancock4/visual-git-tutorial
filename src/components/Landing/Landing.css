@@ -306,12 +306,6 @@
   margin-left: auto;
   margin-right: auto;
 }
-.lp-team-link {
-  color: var(--lp-accent);
-  font-weight: 600;
-  text-decoration: underline;
-}
-.lp-team-link[aria-disabled="true"] { cursor: default; }
 .lp-price-card {
   position: relative;
   display: flex;
