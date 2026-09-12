@@ -95,16 +95,6 @@ function AppContent() {
           >
             What is this?
           </button>
-          <a
-            className="header-link header-link-seeshell"
-            href="https://bhancock4.github.io/visual-shell-tutorial/"
-            target="_blank"
-            rel="noreferrer"
-            title="New to the shell? Learn the basics with seeShell first."
-          >
-            <span className="seeshell-icon" aria-hidden="true">🐚</span>
-            <span className="seeshell-label">New to the shell?</span>
-          </a>
           <span className="header-divider" aria-hidden="true" />
           <button className="header-btn" onClick={undo} disabled={!canUndo} title="Undo last command">
             &#8630; Undo
