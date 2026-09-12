@@ -7,8 +7,6 @@ const TUTORIAL_HREF = '#/tutorial';
 const INDIVIDUAL_CHECKOUT = import.meta.env.VITE_CHECKOUT_INDIVIDUAL_URL || '#';
 const TEAM_CHECKOUT = import.meta.env.VITE_CHECKOUT_TEAM_URL || '#';
 
-const SEESHELL_URL = 'https://bhancock4.github.io/visual-shell-tutorial/';
-
 const zones = [
   { key: 'working', label: 'Working Directory', blurb: 'Where the AI edits your files.' },
   { key: 'staging', label: 'Staging Area', blurb: 'What you choose to keep.' },
@@ -90,7 +88,7 @@ export function Landing() {
           </p>
           <div className="lp-hero-actions">
             <a className="lp-btn lp-btn-primary lp-btn-lg" href={TUTORIAL_HREF}>
-              Start the interactive tutorial
+              Start the visual tutorial
             </a>
             <a className="lp-btn lp-btn-ghost lp-btn-lg" href="#how">
               See how it works
@@ -262,12 +260,12 @@ export function Landing() {
                 href={INDIVIDUAL_CHECKOUT}
                 {...(INDIVIDUAL_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
               >
-                Get Individual
+                Buy Individual
               </a>
             </div>
 
             <div className="lp-price-card">
-              <h3 className="lp-price-name">Team</h3>
+              <h3 className="lp-price-name">Team Pack</h3>
               <p className="lp-price-amount">$149</p>
               <p className="lp-price-per">per team · placeholder</p>
               <ul className="lp-price-feats">
@@ -277,11 +275,11 @@ export function Landing() {
                 <li>Invoicing &amp; support</li>
               </ul>
               <a
-                className="lp-btn lp-btn-ghost lp-price-cta"
+                className="lp-btn lp-btn-primary lp-price-cta"
                 href={TEAM_CHECKOUT}
                 {...(TEAM_CHECKOUT === '#' ? { 'aria-disabled': true } : {})}
               >
-                Contact us
+                Buy Team Pack
               </a>
             </div>
           </div>
@@ -328,9 +326,6 @@ export function Landing() {
             <a href={TUTORIAL_HREF}>Launch tutorial</a>
             <a href="#pricing">Pricing</a>
             <a href="#faq">FAQ</a>
-            <a href={SEESHELL_URL} target="_blank" rel="noreferrer">
-              New to the shell? Try seeShell
-            </a>
           </div>
         </div>
       </footer>
