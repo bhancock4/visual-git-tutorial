@@ -5,7 +5,7 @@ export const whatIsGitScenario: Scenario = {
   title: '0. What is Git?',
   description: 'Understand why git exists by experiencing the problem it solves',
   narrative:
-    "Imagine you're building a website. You've been working on it all day and it's looking great. Then you make a change... and everything breaks. You can't remember what it looked like before. Your work is gone.\n\nThat's the problem git solves. Git is like a save system for your project — it lets you take snapshots, go back in time, and even work with other people without anyone's changes getting lost.\n\nLet's experience the problem first, then see how git fixes it.",
+    "Imagine you're building a website with an AI assistant. You've been working on it all day and it's looking great. Then the AI suggests a big rewrite... you accept it, and everything breaks. You can't remember what it looked like before. Your work is gone.\n\nThat's the problem git solves. Git is like a save system for your project — it lets you take snapshots, go back in time, and undo a bad change (yours or the AI's) without losing anything.\n\nLet's experience the problem first, then see how git fixes it.",
   difficulty: 'beginner',
   order: 0,
   tags: ['concepts', 'why-git', 'intro'],
@@ -66,9 +66,9 @@ export const whatIsGitScenario: Scenario = {
     },
     {
       id: 'break-it',
-      title: 'Make a Risky Change',
+      title: 'Accept a Bad AI Rewrite',
       narrative:
-        "Your site is working great. But you want to try something different — a complete rewrite of the homepage. Overwrite the file with new content.",
+        "Your site is working great. Then your AI assistant suggests a bold rewrite of the homepage. It sounds good, so you accept it — letting the AI overwrite the file with its new content.",
       expectedCommand: 'echo "UNDER CONSTRUCTION" > index.html',
       hint: 'Type: echo "UNDER CONSTRUCTION" > index.html',
       isBashOnly: true,
@@ -78,8 +78,8 @@ export const whatIsGitScenario: Scenario = {
         return file !== undefined && file.content !== 'Welcome to my awesome site!';
       },
       helpContent: {
-        explanation: 'You just overwrote your file. The old content is gone — there\'s no Ctrl+Z for this.',
-        why: 'This is the exact moment where git would have saved you. Without it, your original work is lost forever. In real life, this happens with code changes, deleted files, and bad refactors.',
+        explanation: 'You just let the AI overwrite your file. The old content is gone — there\'s no Ctrl+Z for this.',
+        why: 'This is the exact moment where git would have saved you. Without it, your original work is lost the instant you accept a change. When you build with AI, this happens fast: one accepted suggestion can replace hours of work.',
       },
       milestone: { id: 'felt-the-pain', title: 'Felt the Pain' },
     },
@@ -87,7 +87,7 @@ export const whatIsGitScenario: Scenario = {
       id: 'verify-loss',
       title: 'Try to Get It Back',
       narrative:
-        "Hmm, that new version isn't great. Let's check what happened to your original work. Use `cat` to see what's in the file now.",
+        "Hmm, the AI's version isn't great. Let's check what happened to your original work. Use `cat` to see what's in the file now.",
       expectedCommand: 'cat index.html',
       hint: 'Type: cat index.html',
       isBashOnly: true,
@@ -95,8 +95,8 @@ export const whatIsGitScenario: Scenario = {
       validation: (_state, lastCommand) => lastCommand.trim() === 'cat index.html',
       helpContent: {
         explanation:
-          'Your original "Welcome to my awesome site!" is gone. Replaced. No undo. No history. No way back.\n\nThis is what working without version control feels like. Every save is destructive — the old version just vanishes.',
-        why: "In a real project, this could mean hours or days of work lost. This is the problem that drove developers to create git.",
+          'Your original "Welcome to my awesome site!" is gone. Replaced by the AI\'s rewrite. No undo. No history. No way back.\n\nThis is what working without version control feels like. Every accepted change is destructive — the old version just vanishes.',
+        why: "In a real project, this could mean hours or days of work lost to a single AI suggestion. This is the problem that drove developers to create git.",
       },
     },
 
@@ -146,7 +146,7 @@ export const whatIsGitScenario: Scenario = {
       helpContent: {
         explanation:
           "`git add` moves files to the Staging Area. Think of it like putting items in a box before sealing it. You pick what goes in the snapshot.",
-        why: "Why not just save everything automatically? Because sometimes you're working on two things at once and only one is ready. Staging lets you save exactly what you want.",
+        why: "Why not just save everything automatically? Because sometimes you're working on two things at once and only one is ready. Staging lets you save exactly what you want — you'll practice being picky about it in the next scenario.",
         docsUrl: 'https://git-scm.com/docs/git-add',
         relatedCommands: ['git status', 'git add .'],
       },
@@ -169,9 +169,9 @@ export const whatIsGitScenario: Scenario = {
     },
     {
       id: 'risky-change-again',
-      title: 'Make Another Risky Change',
+      title: 'Accept Another Bad AI Rewrite',
       narrative:
-        "Now try something risky again. Overwrite the homepage — just like before. But this time, don't worry. Git has your back.",
+        "Now the AI pitches another rewrite — and you accept it again, overwriting the homepage just like before. But this time, don't worry. Git has your back.",
       expectedCommand: 'echo "UNDER CONSTRUCTION" > index.html',
       hint: 'Type: echo "UNDER CONSTRUCTION" > index.html',
       isBashOnly: true,
@@ -181,7 +181,7 @@ export const whatIsGitScenario: Scenario = {
         return file !== undefined && file.content !== 'Welcome to my awesome site!';
       },
       helpContent: {
-        explanation: "You just overwrote the file again. Same move as before. But this time there's a difference — git remembers the old version.",
+        explanation: "You just let the AI overwrite the file again. Same move as before. But this time there's a difference — git remembers the version you committed.",
         why: 'This is the exact same situation that burned you earlier. Let\'s see how it plays out differently with git.',
       },
     },
@@ -196,15 +196,15 @@ export const whatIsGitScenario: Scenario = {
       helpContent: {
         explanation:
           '`git log` shows all your commits — every snapshot you\'ve ever taken. Your "My awesome homepage" commit is right there. The original content is preserved inside it.',
-        why: "This is the timeline of your project. Even though you overwrote the file, git still has the old version stored in that commit. Nothing is lost.",
+        why: "This is the timeline of your project. Even though the AI overwrote the file, git still has the good version stored in that commit. Nothing is lost.",
         docsUrl: 'https://git-scm.com/docs/git-log',
       },
     },
     {
       id: 'restore',
-      title: 'Go Back in Time',
+      title: 'Undo the AI Edit',
       narrative:
-        "Let's restore your old version. `git checkout -- index.html` tells git: \"throw away my current changes and go back to the last saved version.\" Watch the file content revert!",
+        "Let's throw away the AI's rewrite and get your saved version back. `git checkout -- index.html` tells git: \"discard my current changes and go back to the last committed version.\" Watch the file content revert!",
       expectedCommand: /^git checkout -- /,
       hint: 'Type: git checkout -- index.html',
       validation: (state) => {
@@ -213,8 +213,8 @@ export const whatIsGitScenario: Scenario = {
       },
       helpContent: {
         explanation:
-          '`git checkout -- <file>` restores a file to its last committed version. Your "UNDER CONSTRUCTION" change is gone, and "Welcome to my awesome site!" is back.',
-        why: "This is the moment. The same change that destroyed your work before is now completely reversible. That's the power of git — every commit is a safety net you can fall back to.",
+          '`git checkout -- <file>` restores a file to its last committed version. The AI\'s "UNDER CONSTRUCTION" change is gone, and "Welcome to my awesome site!" is back.',
+        why: "This is the moment. The same accepted AI change that destroyed your work before is now completely reversible. That's the power of git — every commit is a safety net you can fall back to, no matter who (or what) made the change.",
         docsUrl: 'https://git-scm.com/docs/git-checkout',
         relatedCommands: ['git restore', 'git reset'],
       },
@@ -232,8 +232,8 @@ export const whatIsGitScenario: Scenario = {
       validation: (_state, lastCommand) => lastCommand.trim() === 'cat index.html',
       helpContent: {
         explanation:
-          '"Welcome to my awesome site!" — it\'s back. Git kept your save point, and you were able to restore from it. No work lost.',
-        why: "You just experienced the core loop of git:\n\n1. Do work\n2. Save a snapshot (commit)\n3. Experiment freely\n4. Restore if things go wrong\n\nThat's it. That's why git exists. Everything else — branches, merges, remotes — builds on this foundation.\n\nReady to learn more? Head to Scenario 1 to go deeper.",
+          '"Welcome to my awesome site!" — it\'s back. Git kept your save point, and you restored from it. No work lost.',
+        why: "You just experienced the core loop of building with git:\n\n1. Do work (yours or the AI's)\n2. Save a snapshot (commit)\n3. Experiment freely — accept AI suggestions without fear\n4. Restore if things go wrong\n\nThat's it. That's why git exists. Everything else — branches, merges, remotes — builds on this foundation.\n\nReady to learn more? Head to Scenario 1 to go deeper.",
       },
       milestone: { id: 'git-believer', title: 'Git Believer' },
     },
