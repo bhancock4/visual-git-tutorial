@@ -49,9 +49,9 @@ function commandsForStep(
   // need to stage + commit for validation (state.commits.size >= 2)
   if (scenarioId === 'remote' && stepId === 'make-remote-change') {
     return [
-      'echo "teammate work" > teammate.txt',
+      'echo "quick fix" > hotfix.txt',
       'git add .',
-      'git commit -m "Teammate update"',
+      'git commit -m "Quick fix from another session"',
     ];
   }
 

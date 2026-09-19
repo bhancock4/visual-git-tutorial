@@ -4,8 +4,9 @@ import type { GitEngine } from '../engine/GitEngine';
 export const remoteScenario: Scenario = {
   id: 'remote',
   title: '4. Working with Remotes',
-  description: 'Connect to a remote repository and push/pull changes',
-  narrative: "So far everything has been local on your machine. But git's real power is collaboration. A remote repository (like GitHub) lets you share your code and work with others. Let's set one up and learn push and pull.",
+  description: 'Sync your work with a remote so it lives somewhere beyond your machine',
+  narrative:
+    "Everything you and your AI co-builder have made so far lives on one machine. If that machine dies, or you switch to another one, or an automated job needs your code, it's all stuck.\n\nA remote fixes that. A remote repository (like GitHub) is a shared copy of your project that lives elsewhere. You `push` to send your history up and `pull` to bring new work down. It's your backup and your sync point — the place your commits go to be safe, and where changes from your other devices or agents show up. Let's set one up.",
   difficulty: 'beginner',
   order: 4,
   tags: ['remote', 'push', 'pull', 'fetch'],
@@ -32,7 +33,7 @@ export const remoteScenario: Scenario = {
       validation: (state) => state.remotes.size > 0,
       helpContent: {
         explanation: '`git remote add origin <url>` tells git "there\'s another copy of this repo at this URL, and I want to call it origin."',
-        why: 'The remote is how you share code. "origin" is just a nickname - you could call it anything, but origin is the standard name for your primary remote.',
+        why: "The remote is your history's home away from your laptop — a backup and a sync point. \"origin\" is just a nickname; you could call it anything, but origin is the standard name for your primary remote. Even building solo with AI, this is what keeps your work from being trapped on one machine.",
         docsUrl: 'https://git-scm.com/docs/git-remote',
       },
       milestone: { id: 'first-remote', title: 'Connected to Remote' },
@@ -40,7 +41,7 @@ export const remoteScenario: Scenario = {
     {
       id: 'push',
       title: 'Push to Remote',
-      narrative: "Now let's send your commits to the remote. `git push` copies your commits from Local Repository to the Remote Repository. Watch the visual diagram!",
+      narrative: "Now send your commits to the remote. `git push` copies your commits — everything you and the AI have built — from your Local Repository up to the Remote Repository. Watch the visual diagram!",
       expectedCommand: /git push/,
       hint: 'Type: git push origin main',
       validation: (state) => {
@@ -51,7 +52,7 @@ export const remoteScenario: Scenario = {
       },
       helpContent: {
         explanation: '`git push origin main` sends your main branch\'s commits to the remote called origin. The remote now has a copy of your work.',
-        why: 'Pushing is how you back up your work and share it with others. Until you push, your commits only exist on your machine.',
+        why: 'Pushing is how you back up your work and make it available beyond this machine. Until you push, your commits — and every AI-assisted change in them — only exist locally.',
         docsUrl: 'https://git-scm.com/docs/git-push',
         relatedCommands: ['git push -u origin main'],
       },
@@ -59,31 +60,31 @@ export const remoteScenario: Scenario = {
     },
     {
       id: 'make-remote-change',
-      title: 'Simulate a Remote Change',
-      narrative: "In real life, someone else might push changes to the remote. Let's simulate that. Create a new file and commit it - pretend a teammate did this on the remote.",
+      title: 'A New Change Shows Up',
+      narrative: "The remote doesn't only receive your pushes — it can move ahead of you. Maybe you committed a fix on another machine, or an automated agent pushed one. Let's simulate a new change landing that needs to reach the remote: create a file and commit it.",
       expectedCommand: /echo|touch/,
-      hint: 'Try: echo "teammate work" > teammate.txt then git add . and git commit -m "Teammate update"',
+      hint: 'Try: echo "quick fix" > hotfix.txt then git add . and git commit -m "Quick fix from another session"',
       isBashOnly: true,
-      autoCommand: 'echo "teammate work" > teammate.txt',
+      autoCommand: 'echo "quick fix" > hotfix.txt',
       validation: (state) => {
         // Check if there are commits beyond the initial one
         return state.commits.size >= 2;
       },
       helpContent: {
-        explanation: "In this simulation, we're creating changes locally that represent what a teammate might push to the remote. In real git, their push would update the remote directly.",
-        why: 'Understanding that remotes can change independently from your local repo is key to collaboration.',
+        explanation: "In this simulation we're making a new commit locally to stand in for work that arrived from elsewhere — another device or an automated agent. In real git, that change would already be on the remote, and you'd bring it down with `git pull`.",
+        why: 'The key idea: your local repo and the remote can drift apart. Work can land in either place, so syncing in both directions — push and pull — is what keeps them together.',
       },
     },
     {
       id: 'push-again',
-      title: 'Push Your Latest Work',
-      narrative: "Now push your latest commit to keep the remote up to date.",
+      title: 'Push to Sync Again',
+      narrative: "Push your latest commit to bring the remote back in sync with your local work.",
       expectedCommand: /git push/,
       hint: 'Type: git push origin main',
       validation: (_state, lastCommand) => lastCommand.includes('git push'),
       helpContent: {
         explanation: 'Each push sends any new commits to the remote. The remote updates to match your local branch.',
-        why: 'Push frequently to keep your remote backup current and to share your work with teammates.',
+        why: 'Push often to keep your remote backup current and your machines in sync. The more you build with AI, the more small changes pile up — frequent pushes make sure none of them are stranded on one device.',
       },
       milestone: { id: 'push-pro', title: 'Push Pro' },
     },
